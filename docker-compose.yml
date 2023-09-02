@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "888:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    restart: on-failure
+    env_file:
+      - .env
+    command: >
+      sh -c "npm start"
+
+  db:
+    image: postgres
+    env_file:
+      - .env
+    ports:
+      - "27018:5432"
+    volumes:
+      - ./pg_db:/data/db
+      - ./pg-init.ts:/docker-entrypoint-initdb.d/pg-init.ts:ro
